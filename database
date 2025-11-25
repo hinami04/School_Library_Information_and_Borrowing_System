@@ -175,6 +175,14 @@ INSERT INTO `user` (`firstname`, `lastname`, `contactno`, `email`, `UserID`, `pa
 ('Ijean', 'Manubag', NULL, 'ijean@gmail.com', '', '$2y$10$s4uEeIP3EAI7gdii14lV0untaG.xdmlKS5WLrHRAJpVEoHvpcgWJS'),
 ('Juan', 'Dela Cruz', NULL, 'juan@gmail.com', '1', '$2y$10$61u0CYCPGoNzEpUm8qu3fO/PmUUcDjNXe2Gy6uWE1JEERdS.p.A4i');
 
+
+--
+-- Table structure for table site_index
+--
+
+
+
+
 --
 -- Indexes for dumped tables
 --
