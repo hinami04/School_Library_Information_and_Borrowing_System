@@ -1,0 +1,15 @@
+CREATE TABLE borrowTransaction (
+    BorrowID VARCHAR(25) PRIMARY KEY,
+    DueDate DATE NOT NULL,
+    BorrowDate DATE NOT NULL,
+    ReturnDate DATE,
+    StudentID VARCHAR(15),
+    TeacherID VARCHAR(10),
+    LibrarianID VARCHAR(15),
+    FOREIGN KEY (StudentID) REFERENCES student(StudentID)
+        ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (TeacherID) REFERENCES teacher(TeacherID)
+        ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (LibrarianID) REFERENCES librarian(LibrarianID)
+        ON DELETE CASCADE ON UPDATE CASCADE
+);
