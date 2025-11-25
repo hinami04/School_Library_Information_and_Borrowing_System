@@ -1,0 +1,9 @@
+CREATE TABLE categoryBook (
+    categoryID INT NOT NULL,
+    BookID VARCHAR(50) NOT NULL,
+    PRIMARY KEY (categoryID, BookID),
+    FOREIGN KEY (categoryID) REFERENCES category(categoryID)
+        ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (BookID) REFERENCES book(BookID)
+        ON DELETE CASCADE ON UPDATE CASCADE
+);
