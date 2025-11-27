@@ -1,43 +1,19 @@
 -- phpMyAdmin SQL Dump
 -- version 5.2.1
--- https://www.phpmyadmin.net/
---
--- Host: 127.0.0.1
--- Generation Time: Nov 25, 2025 at 04:58 PM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.1.25
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
 
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
-
---
--- Database: `project`
---
-
--- --------------------------------------------------------
-
---
--- Table structure for table `book`
---
+CREATE DATABASE IF NOT EXISTS project;
+USE project;
 
 CREATE TABLE `book` (
   `BookID` varchar(50) NOT NULL,
   `title` varchar(100) NOT NULL,
-  `Author` varchar(75) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `borrowtransaction`
---
+  `Author` varchar(75) NOT NULL,
+  PRIMARY KEY (`BookID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `borrowtransaction` (
   `BorrowID` varchar(25) NOT NULL,
@@ -46,117 +22,75 @@ CREATE TABLE `borrowtransaction` (
   `ReturnDate` date NOT NULL,
   `StudentID` varchar(15) NOT NULL,
   `TeacherID` varchar(10) NOT NULL,
-  `LibrarianID` varchar(15) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `borrowtransactionbook`
---
+  `LibrarianID` varchar(15) NOT NULL,
+  PRIMARY KEY (`BorrowID`),
+  KEY `StudentID` (`StudentID`),
+  KEY `TeacherID` (`TeacherID`),
+  KEY `LibrarianID` (`LibrarianID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `borrowtransactionbook` (
   `BookID` varchar(50) NOT NULL,
-  `BorrowID` varchar(25) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `category`
---
+  `BorrowID` varchar(25) NOT NULL,
+  PRIMARY KEY (`BookID`,`BorrowID`),
+  KEY `fk_bookBorrowtransaction` (`BorrowID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `category` (
   `CategoryID` int(15) NOT NULL,
   `Name` varchar(75) NOT NULL,
-  `Description` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `categorybook`
---
+  `Description` varchar(255) NOT NULL,
+  PRIMARY KEY (`CategoryID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `categorybook` (
-  `CateogryId` int(15) NOT NULL,
-  `BookID` varchar(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `librarian`
---
+  `CategoryID` int(15) NOT NULL,
+  `BookID` varchar(50) NOT NULL,
+  PRIMARY KEY (`CategoryID`,`BookID`),
+  KEY `fk_categorybook` (`BookID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `librarian` (
-  `LibrarianID` varchar(15) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `penalty`
---
+  `LibrarianID` varchar(15) NOT NULL,
+  PRIMARY KEY (`LibrarianID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `penalty` (
   `PenaltyID` varchar(20) NOT NULL,
   `Amount` decimal(8,2) NOT NULL,
   `Status` varchar(20) NOT NULL,
-  `BorrowID` varchar(25) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `reservation`
---
+  `BorrowID` varchar(25) NOT NULL,
+  PRIMARY KEY (`PenaltyID`),
+  KEY `BorrowID` (`BorrowID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `reservation` (
   `ReservationID` varchar(20) NOT NULL,
   `DateReserved` date NOT NULL,
   `DateStatus` varchar(20) NOT NULL,
-  `StudentID` varchar(15) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `reservationbook`
---
+  `StudentID` varchar(15) NOT NULL,
+  PRIMARY KEY (`ReservationID`),
+  KEY `StudentID` (`StudentID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `reservationbook` (
   `BookID` varchar(50) NOT NULL,
-  `ReservationID` varchar(20) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `student`
---
+  `ReservationID` varchar(20) NOT NULL,
+  PRIMARY KEY (`BookID`,`ReservationID`),
+  KEY `fk_bookreservation` (`ReservationID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `student` (
   `StudentID` varchar(15) NOT NULL,
   `Course` varchar(10) NOT NULL,
-  `YearLevel` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `teacher`
---
+  `YearLevel` int(11) DEFAULT NULL,
+  PRIMARY KEY (`StudentID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `teacher` (
-  `TeacherID` varchar(10) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `user`
---
+  `TeacherID` varchar(10) NOT NULL,
+  PRIMARY KEY (`TeacherID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `user` (
   `firstname` varchar(75) NOT NULL,
@@ -164,21 +98,13 @@ CREATE TABLE `user` (
   `contactno` varchar(20) DEFAULT NULL,
   `email` varchar(75) NOT NULL,
   `UserID` varchar(15) NOT NULL,
-  `password` varchar(255) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `user`
---
+  `password` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`UserID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 INSERT INTO `user` (`firstname`, `lastname`, `contactno`, `email`, `UserID`, `password`) VALUES
-('Ijean', 'Manubag', NULL, 'ijean@gmail.com', '', '$2y$10$s4uEeIP3EAI7gdii14lV0untaG.xdmlKS5WLrHRAJpVEoHvpcgWJS'),
+('Ijean', 'Manubag', NULL, 'ijean@gmail.com', '0', '$2y$10$s4uEeIP3EAI7gdii14lV0untaG.xdmlKS5WLrHRAJpVEoHvpcgWJS'),
 ('Juan', 'Dela Cruz', NULL, 'juan@gmail.com', '1', '$2y$10$61u0CYCPGoNzEpUm8qu3fO/PmUUcDjNXe2Gy6uWE1JEERdS.p.A4i');
-
-
---
--- Table structure for table site_index
---
 
 CREATE TABLE `site_index` (
     `SettingID` INT AUTO_INCREMENT PRIMARY KEY,
@@ -187,177 +113,53 @@ CREATE TABLE `site_index` (
     `HeroSubtitle` VARCHAR(255) NOT NULL,
     `HeroButtonText` VARCHAR(50) NOT NULL,
     `BackgroundImage` VARCHAR(255)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `site_index`
---
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 INSERT INTO `site_index`
-(`SiteTitle`, `HeroTitle`, `HeroSubtitle`, `HeroButtonText`, `BackgroundImage`) VALUES ('S-LIBS',
-'Welcome to the School Library', 'Discover a world of knowledge. Search, borrow, and read your favorite books with ease.',
+(`SiteTitle`, `HeroTitle`, `HeroSubtitle`, `HeroButtonText`, `BackgroundImage`)
+VALUES ('S-LIBS',
+'Welcome to the School Library',
+'Discover a world of knowledge. Search, borrow, and read your favorite books with ease.',
 'Get Started!', 'assets/img/library-bg.jpg');
-
---
--- Table structure for table 'navigation_menu'
---
 
 CREATE TABLE `navigation_menu` (
     `MenuID` INT AUTO_INCREMENT PRIMARY KEY,
     `Label` VARCHAR(50) NOT NULL,
     `Link` VARCHAR(100) NOT NULL,
     `DisplayOrder` INT NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `navigation_menu`
---
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 INSERT INTO `navigation_menu` (`Label`, `Link`, `DisplayOrder`) VALUES
-('About', 'about.php', 1), ('Create an Account', 'register.php', 2);
+('About', 'about.php', 1),
+('Create an Account', 'register.php', 2);
 
---
--- Indexes for dumped tables
---
-
---
--- Indexes for table `book`
---
-ALTER TABLE `book`
-  ADD PRIMARY KEY (`BookID`);
-
---
--- Indexes for table `borrowtransaction`
---
-ALTER TABLE `borrowtransaction`
-  ADD PRIMARY KEY (`BorrowID`),
-  ADD KEY `StudentID` (`StudentID`),
-  ADD KEY `TeacherID` (`TeacherID`),
-  ADD KEY `LibrarianID` (`LibrarianID`);
-
---
--- Indexes for table `borrowtransactionbook`
---
-ALTER TABLE `borrowtransactionbook`
-  ADD PRIMARY KEY (`BookID`,`BorrowID`),
-  ADD KEY `fk_bookBorrowtransaction` (`BorrowID`);
-
---
--- Indexes for table `category`
---
-ALTER TABLE `category`
-  ADD PRIMARY KEY (`CategoryID`);
-
---
--- Indexes for table `categorybook`
---
-ALTER TABLE `categorybook`
-  ADD PRIMARY KEY (`CateogryId`,`BookID`),
-  ADD KEY `fk_categorybook` (`BookID`);
-
---
--- Indexes for table `librarian`
---
-ALTER TABLE `librarian`
-  ADD PRIMARY KEY (`LibrarianID`);
-
---
--- Indexes for table `penalty`
---
-ALTER TABLE `penalty`
-  ADD PRIMARY KEY (`PenaltyID`),
-  ADD KEY `BorrowID` (`BorrowID`);
-
---
--- Indexes for table `reservation`
---
-ALTER TABLE `reservation`
-  ADD PRIMARY KEY (`ReservationID`),
-  ADD KEY `StudentID` (`StudentID`);
-
---
--- Indexes for table `reservationbook`
---
-ALTER TABLE `reservationbook`
-  ADD PRIMARY KEY (`BookID`,`ReservationID`),
-  ADD KEY `fk_bookreservation` (`ReservationID`);
-
---
--- Indexes for table `student`
---
-ALTER TABLE `student`
-  ADD PRIMARY KEY (`StudentID`);
-
---
--- Indexes for table `teacher`
---
-ALTER TABLE `teacher`
-  ADD PRIMARY KEY (`TeacherID`);
-
---
--- Indexes for table `user`
---
-ALTER TABLE `user`
-  ADD PRIMARY KEY (`UserID`);
-
---
--- Constraints for dumped tables
---
-
---
--- Constraints for table `borrowtransaction`
---
 ALTER TABLE `borrowtransaction`
   ADD CONSTRAINT `fk_borrowtransaction_librarian` FOREIGN KEY (`LibrarianID`) REFERENCES `librarian` (`LibrarianID`),
   ADD CONSTRAINT `fk_borrowtransaction_student` FOREIGN KEY (`StudentID`) REFERENCES `student` (`StudentID`),
   ADD CONSTRAINT `fk_borrowtransaction_teacher` FOREIGN KEY (`TeacherID`) REFERENCES `teacher` (`TeacherID`);
 
---
--- Constraints for table `borrowtransactionbook`
---
 ALTER TABLE `borrowtransactionbook`
   ADD CONSTRAINT `fk_bookBorrowtransaction` FOREIGN KEY (`BorrowID`) REFERENCES `borrowtransaction` (`BorrowID`),
   ADD CONSTRAINT `fk_borrowtransactionBook` FOREIGN KEY (`BookID`) REFERENCES `book` (`BookID`);
 
---
--- Constraints for table `categorybook`
---
 ALTER TABLE `categorybook`
-  ADD CONSTRAINT `fk_bookcategory` FOREIGN KEY (`CateogryId`) REFERENCES `category` (`CategoryID`),
+  ADD CONSTRAINT `fk_bookcategory` FOREIGN KEY (`CategoryID`) REFERENCES `category` (`CategoryID`),
   ADD CONSTRAINT `fk_categorybook` FOREIGN KEY (`BookID`) REFERENCES `book` (`BookID`);
 
---
--- Constraints for table `librarian`
---
 ALTER TABLE `librarian`
   ADD CONSTRAINT `fk_librarian_user` FOREIGN KEY (`LibrarianID`) REFERENCES `user` (`UserID`);
 
---
--- Constraints for table `penalty`
---
 ALTER TABLE `penalty`
   ADD CONSTRAINT `fk_penalty_borrowtransaction` FOREIGN KEY (`BorrowID`) REFERENCES `borrowtransaction` (`BorrowID`);
 
---
--- Constraints for table `reservationbook`
---
 ALTER TABLE `reservationbook`
   ADD CONSTRAINT `fk_bookreservation` FOREIGN KEY (`ReservationID`) REFERENCES `reservation` (`ReservationID`),
   ADD CONSTRAINT `fk_reservationbook` FOREIGN KEY (`BookID`) REFERENCES `book` (`BookID`);
 
---
--- Constraints for table `student`
---
 ALTER TABLE `student`
   ADD CONSTRAINT `fk_student_user` FOREIGN KEY (`StudentID`) REFERENCES `user` (`UserID`);
 
---
--- Constraints for table `teacher`
---
 ALTER TABLE `teacher`
   ADD CONSTRAINT `fk_teacher_user` FOREIGN KEY (`TeacherID`) REFERENCES `user` (`UserID`);
-COMMIT;
 
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+COMMIT;
