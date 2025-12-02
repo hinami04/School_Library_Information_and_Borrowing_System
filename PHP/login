@@ -1,0 +1,33 @@
+<?php
+require "config.php";
+session_start();
+
+if (isset($_POST['login'])) {
+
+    $email = $_POST['email'];
+    $password = $_POST['password'];
+
+    $sql = "SELECT * FROM user WHERE email = '$email' LIMIT 1";
+    $result = $conn->query($sql);
+
+    if ($result->num_rows > 0) {
+
+        $row = $result->fetch_assoc();
+
+        if (password_verify($password, $row['password'])) {
+
+            $_SESSION['UserID'] = $row['UserID'];
+            $_SESSION['firstname'] = $row['firstname'];
+
+            header("Location: dashboard.php");
+            exit();
+
+        } else {
+            echo "Wrong password!";
+        }
+
+    } else {
+        echo "Email not found!";
+    }
+}
+?>
