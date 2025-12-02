@@ -92,19 +92,34 @@ CREATE TABLE `teacher` (
   PRIMARY KEY (`TeacherID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+CREATE TABLE `users_auth` (
+  `AuthID` INT AUTO_INCREMENT PRIMARY KEY,
+  `UserID` varchar(15) NOT NULL,
+  `email` varchar(75) NOT NULL UNIQUE,
+  `password` varchar(255) NOT NULL,
+  `role` ENUM('student','teacher','librarian','admin') NOT NULL DEFAULT 'student',
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (`UserID`) REFERENCES `user`(`UserID`)
+);
+
+DROP TABLE IF EXISTS `user`;
+
 CREATE TABLE `user` (
+  `UserID` varchar(15) NOT NULL,
   `firstname` varchar(75) NOT NULL,
   `lastname` varchar(75) NOT NULL,
-  `contactno` varchar(20) DEFAULT NULL,
-  `email` varchar(75) NOT NULL,
-  `UserID` varchar(15) NOT NULL,
-  `password` varchar(255) DEFAULT NULL,
+  `contactno` varchar(20),
+  `email` varchar(75) NOT NULL UNIQUE,
+  `password` varchar(255) NOT NULL,
+  `role` ENUM('student','teacher','librarian','admin') NOT NULL DEFAULT 'student',
   PRIMARY KEY (`UserID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-INSERT INTO `user` (`firstname`, `lastname`, `contactno`, `email`, `UserID`, `password`) VALUES
-('Ijean', 'Manubag', NULL, 'ijean@gmail.com', '0', '$2y$10$s4uEeIP3EAI7gdii14lV0untaG.xdmlKS5WLrHRAJpVEoHvpcgWJS'),
-('Juan', 'Dela Cruz', NULL, 'juan@gmail.com', '1', '$2y$10$61u0CYCPGoNzEpUm8qu3fO/PmUUcDjNXe2Gy6uWE1JEERdS.p.A4i');
+/*
+ INSERT INTO `user` (`firstname`, `lastname`, `contactno`, `email`, `UserID`, `password`) VALUES
+ ('Ijean', 'Manubag', NULL, 'ijean@gmail.com', '0', '$2y$10$s4uEeIP3EAI7gdii14lV0untaG.xdmlKS5WLrHRAJpVEoHvpcgWJS'),
+ ('Juan', 'Dela Cruz', NULL, 'juan@gmail.com', '1', '$2y$10$61u0CYCPGoNzEpUm8qu3fO/PmUUcDjNXe2Gy6uWE1JEERdS.p.A4i');
+*/
 
 CREATE TABLE `site_index` (
     `SettingID` INT AUTO_INCREMENT PRIMARY KEY,
